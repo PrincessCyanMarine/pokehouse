@@ -68,7 +68,12 @@ export default ({
   setGamepadHovering: Dispatch<SetStateAction<number>>;
   gamepadSelection: number[];
 }) => {
-  const [currentBox, setCurrentBox] = useSaved(1, `${saveName}-currentBox`);
+  const [currentBox, _setCurrentBox] = useSaved(1, `${saveName}-currentBox`);
+  const [lastBox, setLastBox] = useState(currentBox);
+  const setCurrentBox: Dispatch<SetStateAction<number>> = (cb) => {
+    _setCurrentBox(cb);
+    setLastBox(currentBox);
+  };
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -108,6 +113,41 @@ export default ({
     },
   });
   // console.log(filters), [filters]);
+
+  useEffect(() => {
+    if (!isSelected) return;
+    const handleKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key == " ") {
+        ev.preventDefault();
+        ev.stopPropagation();
+        setCurrentBox(lastBox);
+      }
+    };
+    // const handleMouseDown = (ev: MouseEvent) => {
+    //   console.log(ev.button);
+    //   if (ev.button == 4 || ev.button == 3) {
+    //     ev.preventDefault();
+    //     ev.stopPropagation();
+    //     if (ev.button == 4) nextBox();
+    //     else previousBox();
+    //   }
+    // };
+    window.addEventListener("keydown", handleKeyDown);
+    // window.addEventListener("mousedown", handleMouseDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      // window.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, [isSelected, lastBox]);
+
+  useEffect(() => {
+    let first_index = box.findIndex(
+      (pkm) => pkm.Species > 0 && pkm.Species == filters.species
+    );
+    if (first_index == -1) return;
+    setCurrentBox(Math.ceil((first_index + 1) / (sav?.BoxSlotCount || 30)));
+  }, [filters.species]);
+
   const filterBox = (pkm: Pokemon) => {
     let f =
       (filters.species == -1 || pkm.Species == filters.species) &&
@@ -310,6 +350,28 @@ export default ({
           ))}
         </select>
       </div>
+      <div>
+        <Autocomplete
+          options={species}
+          getOptionLabel={(option) =>
+            option == -1 ? "SHOW ALL" : Species[option] || ""
+          }
+          value={filters.species}
+          onChange={(ev, value) => {
+            let _filters = { ...filters };
+            _filters.species = value ?? -1;
+            setFilters(_filters);
+          }}
+          sx={{
+            width: 300,
+          }}
+          renderInput={(params) => (
+            <div ref={params.InputProps.ref}>
+              <input type="text" {...params.inputProps} />
+            </div>
+          )}
+        />
+      </div>
       <div
         style={{
           display: "flex",
@@ -338,26 +400,6 @@ export default ({
               flexDirection: "column",
             }}
           >
-            <Autocomplete
-              options={species}
-              getOptionLabel={(option) =>
-                option == -1 ? "SHOW ALL" : Species[option] || ""
-              }
-              value={filters.species}
-              onChange={(ev, value) => {
-                let _filters = { ...filters };
-                _filters.species = value ?? -1;
-                setFilters(_filters);
-              }}
-              sx={{
-                width: 300,
-              }}
-              renderInput={(params) => (
-                <div ref={params.InputProps.ref}>
-                  <input type="text" {...params.inputProps} />
-                </div>
-              )}
-            />
             <Autocomplete
               options={formats}
               getOptionLabel={(option) =>
@@ -546,6 +588,8 @@ export default ({
               onMouseDown={(ev) => {
                 ev.preventDefault();
                 ev.stopPropagation();
+                // if (ev.button == 4) nextBox();
+                // else if (ev.button == 3) previousBox();
                 setMoveOverMode(undefined);
                 setMoving();
               }}
