@@ -1,0 +1,203 @@
+.box_parent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  align-items: center;
+}
+.box {
+  display: grid;
+  --rows: 5;
+  --cols: 6;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  grid-gap: 8px;
+  align-items: center;
+  justify-items: center;
+  width: fit-content;
+}
+.arrows {
+  display: flex;
+  width: 100%;
+  * {
+    flex: 1;
+    background-color: #556;
+    color: #000;
+    border: #000 solid 1px;
+    border-radius: 4px;
+    &:hover {
+      background-color: #667;
+    }
+  }
+}
+.pokemon {
+  background-color: #112;
+  outline: #000 solid 1px;
+  border-radius: 100%;
+  width: 82px;
+  height: 82px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  img {
+    pointer-events: none;
+  }
+  &.gamepadHovering,
+  &:hover {
+    background-color: #223;
+    // img {
+    //   // filter: drop-shadow(0 0 4px #fff);
+    // }
+  }
+  &.totem > img {
+    filter: drop-shadow(0 0 4px #fa0);
+  }
+  &.moving {
+    opacity: 0.6;
+  }
+  &.selected {
+    background-color: #445;
+    &.gamepadHovering,
+    &:hover {
+      background-color: #556;
+    }
+  }
+  &.shiny {
+    background-color: #212;
+    img {
+      filter: drop-shadow(0 0 8px #fff);
+    }
+    &.gamepadHovering,
+    &:hover {
+      background-color: #323;
+    }
+    &.selected {
+      background-color: #656;
+    }
+  }
+  &.egg {
+    background-color: #121;
+    &.gamepadHovering,
+    &:hover {
+      background-color: #232;
+    }
+    &.selected {
+      background-color: #454;
+    }
+    img {
+      filter: drop-shadow(0 0 4px #070);
+    }
+  }
+  &.gamepadSelected {
+    background-color: #335;
+  }
+  &.hidden {
+    background-color: #112;
+    filter: grayscale(1);
+    img {
+      filter: grayscale(1);
+    }
+    &.gamepadHovering,
+    &:hover {
+      background-color: #112;
+    }
+    &.selected {
+      background-color: #334;
+    }
+  }
+}
+
+.box_row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.saveInfoContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+.saveInfoContainerParent {
+  // background-color: #334;
+  padding: 0 16px 16px;
+  // border-radius: 16px;
+  // border: #000 solid 8px;
+  // width: 580px;
+  // max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.saveInfoGrid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
+  align-items: start;
+  justify-items: center;
+}
+.summary {
+  font-family: "VT323", monospace;
+  font-size: 1.4em;
+  display: none;
+}
+.saveConfiguration {
+  margin-bottom: 16px;
+}
+.selectionModeSelector {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
+.alerts {
+  position: fixed;
+  bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  left: 0;
+  right: 0;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  .alert {
+    width: 80%;
+    background-color: #a00;
+    color: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    border: #000 solid 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+}
+// .select {
+//   font-family: "VT323", monospace;
+//   font-size: 1.2em;
+//   width: 300px;
+//   background-color: #001;
+//   color: #fafafa;
+//   border: 1px solid #fafafa;
+//   border-radius: 8px;
+//   padding: 8px;
+//   cursor: pointer;
+//   &:hover {
+//     background-color: #112;
+//   }
+// }
