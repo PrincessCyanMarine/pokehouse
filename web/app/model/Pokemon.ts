@@ -543,12 +543,12 @@ export const getSprite = (pkm: Pokemon, sav?: SAV | null) => {
     ? "Legends%20Arceus%20Shiny%20Sprites"
     : "Legends%20Arceus%20Sprites";
   let isPLA = pkm.Species > 0 && sav?.Game == GAMES.PLA;
-  let imageURL = isPLA ? imageArceus : imageBase;
+  let imageURL = isPLA ? imageArceus : pkm.Species >= 906 ? "Artwork Pokemon Sprites" : imageBase;
 
   return `https://raw.githubusercontent.com/kwsch/PKHeX/master/PKHeX.Drawing.PokeSprite/Resources/img/${imageURL}/${
-    isPLA ? "c" : "b"
+    isPLA ? "c" : pkm.Species >= 906 ? "a" : "b"
   }_${species}${actualForm > 0 ? "-" + actualForm : ""}${
-    pkm.IsShiny ? "s" : ""
+    pkm.IsShiny && pkm.Species < 906 ? "s" : ""
   }.png`;
 };
 

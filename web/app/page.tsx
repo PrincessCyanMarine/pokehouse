@@ -30,11 +30,12 @@ export default function Home() {
   };
   async function loadBox(save: string) {
     try {
+      console.debug('loading box', save);
       let res = await axios.post(`${URL}/box/get`, {
         path: save,
       });
       let b = (await res.data) as Pokemon[];
-      // console.log(b);
+      console.log('boxes', b);
       // .then((res) => res.text())
       // console.log(b);
       if (!(b && Array.isArray(b)))
@@ -60,10 +61,12 @@ export default function Home() {
 
   async function loadSave(save: string) {
     try {
+      console.debug('loading save', save);
       let res = await axios.post(`${URL}/sav/get`, {
         path: save,
       });
       let b = (await res.data) as SAV;
+      console.debug('saveReceived:', b);
       b.BoxNames = JSON.parse(b.BoxNames as unknown as string);
       b.PartyData = JSON.parse(b.PartyData as unknown as string).map(
         (p: Pokemon) => cleanPokemonData(p)
@@ -88,10 +91,12 @@ export default function Home() {
   }
   async function loadSaves() {
     if (saves.length == 0) return;
+    console.debug('loading saves');
     // if (!URL) return;
     let promises = [];
     for (let save of saves) promises.push(loadSave(save));
     await Promise.allSettled(promises);
+    await loadBoxes();
   }
 
   const [URL, setURL] = useSaved<string | null>("/reroute", "URL");
@@ -109,7 +114,8 @@ export default function Home() {
   };
   useEffect(() => {
     if (!savesLoaded) return;
-    if (!saves.includes("home")) setSaves((s) => ["home", ...s]);
+    // if (!saves.includes("home")) setSaves((s) => ["home", ...s]);
+    if (saves.includes("home")) setSaves((s) => s.filter((v) => v != "home"));
   }, [saves, savesLoaded]);
   const [boxes, setBoxes] = useState<Record<string, Pokemon[] | null>>({});
 
@@ -400,7 +406,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!savesLoaded) return;
-    loadBoxes();
+    console.debug('starting');
     loadSaves();
   }, [saves, savesLoaded]);
 

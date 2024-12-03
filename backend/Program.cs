@@ -171,6 +171,7 @@ namespace PokemonHouse
                                 {
                                     case "/sav/get":
                                         {
+                                            Console.WriteLine("Getting save");
                                             string? path = GetInputData(inputData, "path", JsonValueKind.String)?.GetString();
                                             if (path == null)
                                             {
@@ -214,7 +215,7 @@ namespace PokemonHouse
 
                                             string[]? boxNames = new string[sav.BoxCount];
                                             for (int i = 0; i < sav.BoxCount; i++)
-                                                boxNames[i] = sav.GetBoxName(i);
+                                                boxNames[i] = "" + i;
                                             convertedSav["BoxNames"] = JsonConvert.SerializeObject(boxNames);
                                             Dictionary<string, string>?[] party = new Dictionary<string, string>[6];
                                             for (int i = 0; i < 6; i++)
@@ -227,6 +228,7 @@ namespace PokemonHouse
                                     case "/pkm/get":
                                     case "/box/get":
                                         {
+                                            Console.WriteLine("Getting box");
                                             string? path = GetInputData(inputData, "path", JsonValueKind.String)?.GetString();
                                             int? pos = GetInputData(inputData, "boxPos", JsonValueKind.Number)?.GetInt32();
                                             int? boxNum = GetInputData(inputData, "boxNum", JsonValueKind.Number)?.GetInt32();
@@ -243,6 +245,7 @@ namespace PokemonHouse
                                                         box = sav.BoxData;
                                                         if (boxNum != null)
                                                             box = box.Skip(((int)boxNum % sav.BoxCount) * 30 - 1).Take(30).ToArray();
+                                                        Console.WriteLine(box.Count);
                                                     }
                                                 }
                                                 else if (isHome)
@@ -273,6 +276,7 @@ namespace PokemonHouse
                                             {
                                                 data = Encoding.UTF8.GetBytes("No path provided");
                                             }
+                                            Console.WriteLine("Box gotten");
 
                                         }
                                         break;
@@ -690,7 +694,7 @@ namespace PokemonHouse
             PK9 fakeMon = new PK9();
             fakeMon.Species = 0;
             fakeMon.Nickname = "Empty";
-            fakeMon.OT_Name = "Empty";
+            fakeMon.OriginalTrainerName = "Empty";
             return fakeMon;
         }
 
